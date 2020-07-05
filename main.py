@@ -1,4 +1,6 @@
 import telebot
+import db
+
 
 TOKEN = '1109252246:AAElFSsGAb7Y_fa_sGbUlnbnKfe-3ZwPH0c'
 
