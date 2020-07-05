@@ -1,5 +1,4 @@
 import telebot
-import sql
 
 TOKEN = '1109252246:AAElFSsGAb7Y_fa_sGbUlnbnKfe-3ZwPH0c'
 
@@ -22,3 +21,6 @@ def handling_help(message: telebot.types.Message) :
     Здравствуйте, это простой бот, который Вам будет поомгать сохранять заметки, не выходя из Telegram. Бот также поддерживает сохранения из другого чата, для этого просто можно ввести название бота через @, а затем ввести то, что Вы хотите.
     """
     bot.send_message(message.chat.id, text=text)
+
+
+bot.polling()
