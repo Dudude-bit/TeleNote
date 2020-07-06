@@ -17,11 +17,11 @@ def create_connection() :
 
 
 def create_note(connection: mysql.connector.connection.MySQLConnection,note_title, note_text, user_id) :
-    cursor = connection.cursor()
     query = f"""
     INSERT INTO note (title, note, user_id) VALUES ('{note_title}', '{note_text}','{user_id}')
     """
-    cursor.execute(query)
+    with connection.cursor() as cursor:
+        cursor.execute(query)
 
 
 def get_notes(connection: mysql.connector.connection.MySQLConnection, user_id) :
@@ -29,6 +29,7 @@ def get_notes(connection: mysql.connector.connection.MySQLConnection, user_id) :
     query = f"""
     SELECT * FROM note WHERE user_id = {user_id}
     """
-    cursor.execute(query)
+    with connection.cursor():
+        cursor.execute(query)
     notes = cursor.fetchall()
     return notes
