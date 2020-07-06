@@ -10,7 +10,6 @@ step_dict = dict()
 
 START, ADD_NOTE_TITLE ,ADD_NOTE = range(3)
 
-CONNECTION = db.create_connection()
 
 title_dict = dict()
 
@@ -53,13 +52,15 @@ def add_note(message: telebot.types.Message):
     title = title_dict.pop(message.from_user.id)
     text = message.text
     user_id = message.from_user.id
-    db.create_note(CONNECTION, title, text, user_id)
+    connection = db.create_connection()
+    db.create_note(connection, title, text, user_id)
     bot.send_message(message.chat.id, 'Вы добавили заметку')
 
 @bot.callback_query_handler(func=lambda m:m.data == 'show_note')
 def show_note(callback_query: telebot.types.CallbackQuery):
     user_id = callback_query.from_user.id
-    notes = db.get_notes(CONNECTION, user_id)
+    connection = db.create_connection()
+    notes = db.get_notes(connection, user_id)
     for note in notes:
         bot.send_message(callback_query.message.chat.id, note[1])
 
