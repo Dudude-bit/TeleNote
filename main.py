@@ -70,12 +70,12 @@ def show_note(callback_query: telebot.types.CallbackQuery):
 
 
 @bot.callback_query_handler(func=lambda m:m.data == 'del_notes')
-def delete_all_note(message: telebot.types.CallbackQuery):
-    user_id = message.from_user.id
+def delete_all_note(callback_query: telebot.types.CallbackQuery):
+    user_id = callback_query.from_user.id
     connection = db.create_connection()
     db.delete_all_notes(connection, user_id)
     connection.close()
-    bot.send_message(message.chat.id, 'Все заметки были удалены')
+    bot.send_message(callback_query.message.chat.id, 'Все заметки были удалены')
 
 
 bot.polling()
