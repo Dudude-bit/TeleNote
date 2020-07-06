@@ -8,9 +8,11 @@ bot = telebot.TeleBot(token=TOKEN)
 
 step_dict = dict()
 
-START, ADD_NOTE = range(2)
+START, ADD_NOTE_TITLE ,ADD_NOTE = range(3)
 
 CONNECTION = db.create_connection()
+
+title_dict = dict()
 
 
 @bot.message_handler(commands=['start'])
@@ -34,15 +36,25 @@ def handling_help(message: telebot.types.Message) :
 
 @bot.callback_query_handler(func=lambda x: x.data == 'add_note')
 def adding_note(callback_query: telebot.types.CallbackQuery):
-    step_dict[callback_query.from_user.id] = ADD_NOTE
-    bot.send_message(callback_query.message.chat.id, text='Введите Вашу заметку')
+    step_dict[callback_query.from_user.id] = ADD_NOTE_TITLE
+    bot.send_message(callback_query.message.chat.id, text='Введите название Вашей заметки')
 
+
+@bot.message_handler(content_types=['text'], func=lambda x: step_dict[x.from_user.id] == ADD_NOTE_TITLE)
+def add_note_title(message: telebot.types.Message):
+    note_title = message.text
+    user_id = message.from_user.id
+    title_dict[user_id] = note_title
+    step_dict[message.from_user.id] = ADD_NOTE
+    bot.send_message(message.chat.id, 'Введите теперь Вашу заметку')
 
 @bot.message_handler(content_types=['text'], func=lambda x: step_dict[x.from_user.id] == ADD_NOTE)
 def add_note(message: telebot.types.Message):
-    note_text = message.text
+    title = title_dict.pop(message.from_user.id)
+    text = message.text
     user_id = message.from_user.id
-    db.create_note(CONNECTION, note_text, user_id)
+    db.create_note(CONNECTION, title, text, user_id)
+    bot.send_message(message.chat.id, 'Вы добавили заметку')
 
 @bot.callback_query_handler(func=lambda m:m.data == 'show_note')
 def show_note(callback_query: telebot.types.CallbackQuery):

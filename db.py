@@ -16,10 +16,10 @@ def create_connection() :
     return connection
 
 
-def create_note(connection: mysql.connector.connection.MySQLConnection, note_text, user_id) :
+def create_note(connection: mysql.connector.connection.MySQLConnection,note_title, note_text, user_id) :
     cursor = connection.cursor()
     query = f"""
-    INSERT INTO note (note, user_id) VALUES ('{note_text}','{user_id}')
+    INSERT INTO note (title, note, user_id) VALUES ('{note_title}', '{note_text}','{user_id}')
     """
     cursor.execute(query)
 
