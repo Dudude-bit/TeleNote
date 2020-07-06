@@ -55,6 +55,7 @@ def add_note(message: telebot.types.Message):
     connection = db.create_connection()
     db.create_note(connection, title, text, user_id)
     bot.send_message(message.chat.id, 'Вы добавили заметку')
+    connection.close()
 
 @bot.callback_query_handler(func=lambda m:m.data == 'show_note')
 def show_note(callback_query: telebot.types.CallbackQuery):
@@ -63,6 +64,7 @@ def show_note(callback_query: telebot.types.CallbackQuery):
     notes = db.get_notes(connection, user_id)
     for note in notes:
         bot.send_message(callback_query.message.chat.id, note[1])
+    connection.close()
 
 
 bot.polling()
