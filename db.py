@@ -16,7 +16,7 @@ def create_connection() :
     return connection
 
 
-def create_note(connection: mysql.connector.connection.MySQLConnection,note_title, note_text, user_id) :
+def create_note(connection: mysql.connector.connection.MySQLConnection, note_title, note_text, user_id) :
     cursor = connection.cursor()
     query = f"""
     INSERT INTO note (title, note, user_id) VALUES ('{note_title}', '{note_text}','{user_id}')
@@ -32,3 +32,11 @@ def get_notes(connection: mysql.connector.connection.MySQLConnection, user_id) :
     cursor.execute(query)
     notes = cursor.fetchall()
     return notes
+
+
+def delete_all_notes(connection, user_id) :
+    cursor = connection.cursor()
+    query = f"""
+    DELETE FROM note WHERE user_id = {user_id}
+    """
+    cursor.execute(query)

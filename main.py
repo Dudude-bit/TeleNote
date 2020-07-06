@@ -19,7 +19,9 @@ def handling_start(message: telebot.types.Message) :
     kb = telebot.types.InlineKeyboardMarkup()
     btn1 = telebot.types.InlineKeyboardButton(text='Добавить заметку', callback_data='add_note')
     btn2 = telebot.types.InlineKeyboardButton(text='Показать Все заметки', callback_data='show_note')
-    kb.add(btn1, btn2)
+    btn3 = telebot.types.InlineKeyboardButton(text='Удалить все заметки', callback_data='del_notes')
+    kb.row(btn1, btn2)
+    kb.row(btn3)
     bot.send_message(message.chat.id,
                      'Здравствуйте, это простой бот, который Вам поможет сохранять заметки. Для более подробной информации введите команду /help',
                      reply_markup=kb)
@@ -65,6 +67,15 @@ def show_note(callback_query: telebot.types.CallbackQuery):
     for note in notes:
         bot.send_message(callback_query.message.chat.id, note[1])
     connection.close()
+
+
+@bot.callback_query_handler(func=lambda m:m.data == 'del_notes')
+def delete_all_note(message: telebot.types.CallbackQuery):
+    user_id = message.from_user.id
+    connection = db.create_connection()
+    db.delete_all_notes(connection, user_id)
+    connection.close()
+    bot.send_message(message.chat.id, 'Все заметки были удалены')
 
 
 bot.polling()
