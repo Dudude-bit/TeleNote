@@ -1,11 +1,11 @@
 import mysql.connector
 
 
-def create_connection(host_name, user_name, user_password):
+def create_connection():
     connection = None
     try:
         connection = mysql.connector.connect(
-            host=host_name,
+            host=,
             user=user_name,
             passwd=user_password,
             db_name=123
