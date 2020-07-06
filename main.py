@@ -40,7 +40,7 @@ def adding_note(callback_query: telebot.types.CallbackQuery):
     bot.send_message(callback_query.message.chat.id, text='Введите название Вашей заметки')
 
 
-@bot.message_handler(content_types=['text'], func=lambda x: step_dict[x.from_user.id] == ADD_NOTE_TITLE)
+@bot.message_handler(content_types=['text'], func=lambda x: step_dict.get(x.from_user.id, START) == ADD_NOTE_TITLE)
 def add_note_title(message: telebot.types.Message):
     note_title = message.text
     user_id = message.from_user.id
@@ -48,7 +48,7 @@ def add_note_title(message: telebot.types.Message):
     step_dict[message.from_user.id] = ADD_NOTE
     bot.send_message(message.chat.id, 'Введите теперь Вашу заметку')
 
-@bot.message_handler(content_types=['text'], func=lambda x: step_dict[x.from_user.id] == ADD_NOTE)
+@bot.message_handler(content_types=['text'], func=lambda x: step_dict.get(x.from_user.id, START) == ADD_NOTE)
 def add_note(message: telebot.types.Message):
     title = title_dict.pop(message.from_user.id)
     text = message.text
