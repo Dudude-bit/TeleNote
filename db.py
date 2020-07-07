@@ -33,6 +33,15 @@ def get_notes(connection: mysql.connector.connection.MySQLConnection, user_id) :
     notes = cursor.fetchall()
     return notes
 
+def get_one_note(connection, note_id):
+    cursor = connection.cursor()
+    query = f"""
+    SELECT * FROM note WHERE note_id = {note_id}
+    """
+    cursor.execute(query)
+    note = cursor.fetchall()[0]
+    return note
+
 
 def delete_all_notes(connection, user_id) :
     cursor = connection.cursor()

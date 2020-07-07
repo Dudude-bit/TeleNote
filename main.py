@@ -59,13 +59,23 @@ def add_note(message: telebot.types.Message):
     bot.send_message(message.chat.id, 'Вы добавили заметку')
     connection.close()
 
+
 @bot.callback_query_handler(func=lambda m:m.data == 'show_note')
 def show_note(callback_query: telebot.types.CallbackQuery):
     user_id = callback_query.from_user.id
     connection = db.create_connection()
     notes = db.get_notes(connection, user_id)
+    kb = telebot.types.InlineKeyboardMarkup(row_width=1)
     for note in notes:
-        bot.send_message(callback_query.message.chat.id, note[1])
+        kb.add(telebot.types.InlineKeyboardButton(text=note[3], callback_data=f'note_{note[0]}'))
+    bot.send_message(callback_query.message.chat.id, 'Это все Ваши заметки', reply_markup=kb)
+    connection.close()
+
+@bot.callback_query_handler(func=lambda x:x.data.startswith('note'))
+def get_one_note(message):
+    connection = db.create_connection()
+    note = db.get_one_note(connection, message)
+    bot.send_message(message.message.chat.id, note)
     connection.close()
 
 
