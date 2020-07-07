@@ -33,10 +33,8 @@ def handling_to_start(callback_query: telebot.types.CallbackQuery) :
     btn3 = telebot.types.InlineKeyboardButton(text='Удалить все заметки', callback_data='del_notes')
     kb.row(btn1, btn2)
     kb.row(btn3)
-    bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
-                                  reply_markup=kb)
     bot.edit_message_text(text='Здравствуйте, это простой бот, который Вам поможет сохранять заметки. Для более подробной информации введите команду /help',
-                          chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
+                          chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, reply_markup=kb)
 
 
 @bot.message_handler(commands=['help'])
