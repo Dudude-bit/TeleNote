@@ -75,7 +75,7 @@ def show_note(callback_query: telebot.types.CallbackQuery):
 def get_one_note(message):
     connection = db.create_connection()
     note_id = message.data.replace('note_', '')
-    note = db.get_one_note(connection, note_id)
+    note = db.get_one_note(connection, note_id)[1]
     bot.send_message(message.message.chat.id, note)
     connection.close()
 
