@@ -67,7 +67,7 @@ def show_note(callback_query: telebot.types.CallbackQuery) :
     kb = telebot.types.InlineKeyboardMarkup(row_width=1)
     for note in notes :
         kb.add(telebot.types.InlineKeyboardButton(text=note[3], callback_data=f'note_{note[0]}'))
-    bot.edit_message_reply_markup(callback_query.message.chat.id, inline_message_id=callback_query.inline_message_id, reply_markup=kb)
+    bot.edit_message_reply_markup(callback_query.message.chat.id, message_id=callback_query.message.id, reply_markup=kb)
     connection.close()
 
 
