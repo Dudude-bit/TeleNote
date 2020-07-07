@@ -25,6 +25,20 @@ def handling_start(message: telebot.types.Message) :
                      reply_markup=kb)
 
 
+@bot.callback_query_handler(func=lambda m : m.data == 'start')
+def handling_to_start(callback_query: telebot.types.CallbackQuery) :
+    kb = telebot.types.InlineKeyboardMarkup()
+    btn1 = telebot.types.InlineKeyboardButton(text='Добавить заметку', callback_data='add_note')
+    btn2 = telebot.types.InlineKeyboardButton(text='Показать Все заметки', callback_data='show_note')
+    btn3 = telebot.types.InlineKeyboardButton(text='Удалить все заметки', callback_data='del_notes')
+    kb.row(btn1, btn2)
+    kb.row(btn3)
+    bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
+                                  reply_markup=kb)
+    bot.edit_message_text(text='Здравствуйте, это простой бот, который Вам поможет сохранять заметки. Для более подробной информации введите команду /help',
+                          chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
+
+
 @bot.message_handler(commands=['help'])
 def handling_help(message: telebot.types.Message) :
     text = """
@@ -67,8 +81,9 @@ def show_note(callback_query: telebot.types.CallbackQuery) :
     kb = telebot.types.InlineKeyboardMarkup(row_width=1)
     for note in notes :
         kb.add(telebot.types.InlineKeyboardButton(text=note[3], callback_data=f'note_{note[0]}'))
-    kb.add(telebot.types.InlineKeyboardButton(text='Назад', callback_data='123'))
-    bot.edit_message_reply_markup(callback_query.message.chat.id, message_id=callback_query.message.message_id, reply_markup=kb)
+    kb.add(telebot.types.InlineKeyboardButton(text='Назад', callback_data='start'))
+    bot.edit_message_reply_markup(callback_query.message.chat.id, message_id=callback_query.message.message_id,
+                                  reply_markup=kb)
     connection.close()
 
 
