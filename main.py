@@ -33,8 +33,9 @@ def handling_to_start(callback_query: telebot.types.CallbackQuery) :
     btn3 = telebot.types.InlineKeyboardButton(text='Удалить все заметки', callback_data='del_notes')
     kb.row(btn1, btn2)
     kb.row(btn3)
-    bot.edit_message_text(text='Здравствуйте, это простой бот, который Вам поможет сохранять заметки. Для более подробной информации введите команду /help',
-                          chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, reply_markup=kb)
+    bot.edit_message_text(
+        text='Здравствуйте, это простой бот, который Вам поможет сохранять заметки. Для более подробной информации введите команду /help',
+        chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, reply_markup=kb)
 
 
 @bot.message_handler(commands=['help'])
@@ -67,7 +68,13 @@ def add_note(message: telebot.types.Message) :
     user_id = message.from_user.id
     connection = db.create_connection()
     db.create_note(connection, title, text, user_id)
-    bot.send_message(message.chat.id, 'Вы добавили заметку')
+    kb = telebot.types.InlineKeyboardMarkup()
+    btn1 = telebot.types.InlineKeyboardButton(text='Добавить заметку', callback_data='add_note')
+    btn2 = telebot.types.InlineKeyboardButton(text='Показать Все заметки', callback_data='show_note')
+    btn3 = telebot.types.InlineKeyboardButton(text='Удалить все заметки', callback_data='del_notes')
+    kb.row(btn1, btn2)
+    kb.row(btn3)
+    bot.send_message(message.chat.id, text='Вы добавили заметку', reply_markup=kb)
     connection.close()
 
 
@@ -100,7 +107,7 @@ def delete_all_note(callback_query: telebot.types.CallbackQuery) :
     connection = db.create_connection()
     db.delete_all_notes(connection, user_id)
     connection.close()
-    bot.send_message(callback_query.message.chat.id, 'Все заметки были удалены')
+    bot.answer_callback_query(callback_query.id, text='Все заметки были удалены', show_alert=True)
 
 
 bot.polling()
