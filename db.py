@@ -53,7 +53,7 @@ def delete_all_notes(connection, user_id) :
 
 
 def search_notes(connection, searching_query) :
-    cursor = connection.cursor
+    cursor = connection.cursor()
     query = f"""
     SELECT * FROM note WHERE title LIKE '%{searching_query}%' OR note LIKE '%{searching_query}%'
     """
