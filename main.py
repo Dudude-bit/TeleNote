@@ -26,12 +26,7 @@ def create_kb() :
 
 @bot.message_handler(commands=['start'])
 def handling_start(message: telebot.types.Message) :
-    kb = telebot.types.InlineKeyboardMarkup()
-    btn1 = telebot.types.InlineKeyboardButton(text='Добавить заметку', callback_data='add_note')
-    btn2 = telebot.types.InlineKeyboardButton(text='Показать Все заметки', callback_data='show_note')
-    btn3 = telebot.types.InlineKeyboardButton(text='Удалить все заметки', callback_data='del_notes')
-    kb.row(btn1, btn2)
-    kb.row(btn3)
+    kb = create_kb()
     bot.send_message(message.chat.id,
                      'Здравствуйте, это простой бот, который Вам поможет сохранять заметки. Для более подробной информации введите команду /help',
                      reply_markup=kb)
